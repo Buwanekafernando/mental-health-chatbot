@@ -1,10 +1,14 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.services.emotion-service import detect_emotion
+from datetime import datetime
+
+from app.services.emotion_service import detect_emotion
+from app.database import chat_collection
 
 router = APIRouter()
 
 class ChatRequest(BaseModel):
+    user_id: str
     message: str
 
 class ChatResponse(BaseModel):
@@ -24,6 +28,14 @@ def analyze_message(data:ChatRequest):
     }
 
     reply = response.get(emotion, "I'm here with you. Tell me more.")
+
+    chat_collection.insert_one({
+        "user_id": data.user_id,
+        "message": data.message,
+        "emotion": emotion,
+        "reply": reply,
+        "timestamp": datetime.now()
+    })
 
     return{
         "emotion": emotion,
