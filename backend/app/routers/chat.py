@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from datetime import datetime
 from bson import ObjectId
+from datetime import datetime, timedelta
+from collections import Counter
 
 from app.services.emotion_service import detect_emotion
 from app.database import chat_collection
@@ -62,3 +64,19 @@ def get_chat_history(user_id: str):
         history: history
     }
 
+
+def weekly_sentiment_summary(user_id: str):
+    one_week_ago = datetime.now() - timedelta(days=7)
+    
+    chats = chat_collection.find({
+        "user_id": user_id,
+        "timestamp": {"$gte": one_week_ago}
+    })
+
+    emotion = [chat["emotion"] for chat in chats]
+
+    if not emotion:
+        return {
+            "user_id": user_id,
+            "summary": "No chat history found for the last days"
+        }
