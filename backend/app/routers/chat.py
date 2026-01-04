@@ -64,7 +64,7 @@ def get_chat_history(user_id: str):
         history: history
     }
 
-
+@router.get("/weekly-summary/{user_id}")
 def weekly_sentiment_summary(user_id: str):
     one_week_ago = datetime.now() - timedelta(days=7)
     
@@ -78,5 +78,32 @@ def weekly_sentiment_summary(user_id: str):
     if not emotion:
         return {
             "user_id": user_id,
-            "summary": "No chat history found for the last days"
+            "summary": {},
+            "message": "No data available for the last 7 days"
         }
+
+    emotion_counts = Counter(emotions)
+    total = sum(emotion_counts.values())
+
+    summary = {
+        emotion: round((count / total) * 100, 2)
+        for emotion, count in emotion_counts.items()
+    }
+
+    # Simple AI insight
+    dominant_emotion = max(emotion_counts, key=emotion_counts.get)
+
+    insight_map = {
+        "happy": "You've been feeling positive overall this week 😊",
+        "sad": "It seems like this week was emotionally heavy 💙",
+        "stressed": "You've experienced a lot of stress this week 🌱",
+        "angry": "There were moments of frustration this week 😤",
+        "neutral": "Your emotions were fairly balanced this week ⚖️"
+    }
+
+    return {
+        "user_id": user_id,
+        "summary": summary,
+        "dominant_emotion": dominant_emotion,
+        "insight": insight_map.get(dominant_emotion, "Thank you for sharing your feelings.")
+    }
