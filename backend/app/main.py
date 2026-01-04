@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.routers import chat
+from app.routers import auth
 
 app = FastAPI(
     title="AI Mental Health Chat Companion",
@@ -8,6 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(chat.router, prefix="/api/chat")
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 
 @app.get("/")
 def root():
