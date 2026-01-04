@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from datetime import datetime
+from bson import ObjectId
 
 from app.services.emotion_service import detect_emotion
 from app.database import chat_collection
@@ -40,5 +41,24 @@ def analyze_message(data:ChatRequest):
     return{
         "emotion": emotion,
         "reply": reply
+    }
+
+@router.get("/history/{user_id}")
+def get_chat_history(user_id: str):
+    chats = chat_collection.find({"user_id": user_id}).sort("timestamp", 1)
+    
+    history = []
+    for chat in chats:
+        history.append({
+            "id": str(chat["_id"]),
+            "message": chat["message"],
+            "emotion": chat["emotion"],
+            "reply": chat["reply"],
+            "timestamp": chat["timestamp"]
+        })
+
+    return {
+        user_id: user_id,
+        history: history
     }
 
