@@ -5,8 +5,10 @@ from bson import ObjectId
 from datetime import datetime, timedelta
 from collections import Counter
 
+
 from app.services.emotion_service import detect_emotion
 from app.database import chat_collection
+from app.services.crisis_service import detect_crisis
 
 router = APIRouter()
 
@@ -107,3 +109,38 @@ def weekly_sentiment_summary(user_id: str):
         "dominant_emotion": dominant_emotion,
         "insight": insight_map.get(dominant_emotion, "Thank you for sharing your feelings.")
     }
+
+
+@router.post("/analyze", response_model=ChatResponse)
+def analyze_message(data: ChatRequest):
+
+    # 🚨 Crisis check FIRST
+    if detect_crisis(data.message):
+        reply = (
+            "I'm really sorry that you're feeling this much pain 💙\n\n"
+            "You deserve support and help. Please consider reaching out to:\n"
+            "• A trusted person\n"
+            "• A mental health professional\n"
+            "• Emergency services in your country\n\n"
+            "If you're in immediate danger, please contact local emergency services."
+        )
+
+        emotion = "crisis"
+
+        chat_collection.insert_one({
+            "user_id": data.user_id,
+            "message": data.message,
+            "emotion": emotion,
+            "reply": reply,
+            "timestamp": datetime.utcnow(),
+            "crisis": True
+        })
+
+        return {
+            "emotion": emotion,
+            "reply": reply
+        }
+
+    # Normal flow
+    emotion = detect_emotion(data.message)
+    ...
