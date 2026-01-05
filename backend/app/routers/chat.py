@@ -10,7 +10,7 @@ from app.database import chat_collection
 
 router = APIRouter()
 
-# -------------------- MODELS --------------------
+
 
 class ChatRequest(BaseModel):
     message: str
@@ -19,7 +19,7 @@ class ChatResponse(BaseModel):
     emotion: str
     reply: str
 
-# -------------------- ANALYZE MESSAGE --------------------
+
 
 @router.post("/analyze", response_model=ChatResponse)
 def analyze_message(
@@ -28,7 +28,7 @@ def analyze_message(
 ):
     user_id = user_email  # JWT-based user identity
 
-    # 🚨 Crisis detection FIRST
+    
     if detect_crisis(data.message):
         reply = (
             "I'm really sorry that you're feeling this much pain 💙\n\n"
@@ -53,7 +53,7 @@ def analyze_message(
             "reply": reply
         }
 
-    # 🧠 Normal emotion flow
+
     emotion = detect_emotion(data.message)
 
     responses = {
@@ -80,7 +80,7 @@ def analyze_message(
         "reply": reply
     }
 
-# -------------------- CHAT HISTORY --------------------
+
 
 @router.get("/history")
 def get_chat_history(
@@ -105,7 +105,7 @@ def get_chat_history(
         "history": history
     }
 
-# -------------------- WEEKLY SUMMARY --------------------
+
 
 @router.get("/weekly-summary")
 def weekly_sentiment_summary(
