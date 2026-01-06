@@ -26,3 +26,30 @@ Respond kindly, briefly, and supportively.
         return response.text.strip()
     except Exception:
         return "I'm here with you. Please tell me more about how you're feeling."
+
+
+def generate_supportive_reply(
+    message: str,
+    emotion: str,
+    context: str = ""
+) -> str:
+    prompt = f"""
+You are a supportive, empathetic mental health companion.
+You are NOT a therapist or doctor.
+Do NOT give medical advice.
+Do NOT encourage dependency.
+
+Conversation so far:
+{context}
+
+User emotion: {emotion}
+User message: "{message}"
+
+Respond kindly, briefly, and supportively.
+"""
+
+    try:
+        response = model.generate_content(prompt)
+        return response.text.strip()
+    except Exception:
+        return "I'm here with you. Please tell me more about how you're feeling."

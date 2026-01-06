@@ -9,6 +9,7 @@ from app.services.crisis_service import detect_crisis
 from app.services.jwt_dependency import get_current_user
 from app.database import chat_collection
 from app.services.gemini_service import generate_supportive_reply
+from app.services.memory_service import get_recent_conversation
 
 router = APIRouter()
 
@@ -57,10 +58,13 @@ def analyze_message(
 
 
     emotion = detect_emotion(data.message)
+    
+    context = get_recent_conversation(user_id, limit=5)
 
     reply = generate_supportive_reply(
     message=data.message,
-    emotion=emotion
+    emotion=emotion,
+    context=context
     )
 
     chat_collection.insert_one({
