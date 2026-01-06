@@ -3,10 +3,12 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 from collections import Counter
 
+
 from app.services.emotion_service import detect_emotion
 from app.services.crisis_service import detect_crisis
 from app.services.jwt_dependency import get_current_user
 from app.database import chat_collection
+from app.services.gemini_service import generate_supportive_reply
 
 router = APIRouter()
 
@@ -56,15 +58,10 @@ def analyze_message(
 
     emotion = detect_emotion(data.message)
 
-    responses = {
-        "sad": "I'm really sorry you're feeling this way. You're not alone 💙",
-        "happy": "That's great to hear! Keep enjoying the moment 😊",
-        "angry": "It sounds frustrating. Want to talk about what happened?",
-        "fear": "That sounds scary. Take a deep breath with me.",
-        "neutral": "I'm here with you. Tell me more."
-    }
-
-    reply = responses.get(emotion, "I'm here with you. Tell me more.")
+    reply = generate_supportive_reply(
+    message=data.message,
+    emotion=emotion
+    )
 
     chat_collection.insert_one({
         "user_id": user_id,

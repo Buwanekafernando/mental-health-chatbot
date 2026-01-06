@@ -7,3 +7,5 @@ pydantic
 pymongo
 python-jose
 passlib[bcrypt]
+google-generativeai
+
