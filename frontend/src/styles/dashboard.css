@@ -1,0 +1,55 @@
+.dashboard {
+    padding: 24px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.chart-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+    margin-bottom: 5px;
+}
+
+p {
+    color: #666;
+}
+
+.summary-card {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f9fafb;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.summary-card h3 {
+    margin-bottom: 10px;
+}
+
+.insight {
+    font-style: italic;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.emotion-bars div {
+    margin-bottom: 8px;
+}
+
+.bar {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: #4f46e5;
+}
