@@ -12,3 +12,4 @@ client = MongoClient(MONGO_URL)
 db = client[DB_NAME]
 
 chat_collection = db["chat_history"]
+face_emotion_collection = db["face_emotions"]
