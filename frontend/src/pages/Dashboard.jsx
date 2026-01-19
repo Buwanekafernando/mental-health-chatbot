@@ -1,5 +1,6 @@
 import EmotionTrendChart from "../components/EmotionTrendChart";
 import WeeklySummaryCard from "../components/WeeklySummaryCard";
+import CameraEmotion from "../components/CameraEmotion";
 import "../styles/dashboard.css";
 
 const Dashboard = () => {
@@ -11,6 +12,7 @@ const Dashboard = () => {
             <div className="chart-container">
                 <EmotionTrendChart />
                 <WeeklySummaryCard />
+                <CameraEmotion />
             </div>
         </div>
     );
