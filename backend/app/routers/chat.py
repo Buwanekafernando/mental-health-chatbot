@@ -10,6 +10,9 @@ from app.services.jwt_dependency import get_current_user
 from app.database import chat_collection
 from app.services.gemini_service import generate_supportive_reply
 from app.services.memory_service import get_recent_conversation
+from app.services.emotion_fusion_service import fuse_emotions
+from app.services.face_emotion_service import get_recent_face_emotion
+
 
 router = APIRouter()
 
@@ -30,6 +33,7 @@ def analyze_message(
     user_email: str = Depends(get_current_user)
 ):
     user_id = user_email  # JWT-based user identity
+    
 
     
     if detect_crisis(data.message):
@@ -58,12 +62,21 @@ def analyze_message(
 
 
     emotion = detect_emotion(data.message)
+    text_emotion = detect_emotion(data.message)
     
     context = get_recent_conversation(user_id, limit=5)
+    recent_face_emotion = get_recent_face_emotion(user_id)
+
+    final_emotion = fuse_emotions(
+    text_emotion=text_emotion,
+    face_emotion=recent_face_emotion
+    )
+
+
 
     reply = generate_supportive_reply(
     message=data.message,
-    emotion=emotion,
+    emotion=final_emotion,
     context=context
     )
 
@@ -76,8 +89,19 @@ def analyze_message(
         "crisis": False
     })
 
+    chat_collection.insert_one({
+    "user_id": user_id,
+    "message": data.message,
+    "text_emotion": text_emotion,
+    "face_emotion": recent_face_emotion,
+    "final_emotion": final_emotion,
+    "reply": reply,
+    "timestamp": datetime.utcnow()
+    })
+
+
     return {
-        "emotion": emotion,
+        "emotion": final_emotion,
         "reply": reply
     }
 
