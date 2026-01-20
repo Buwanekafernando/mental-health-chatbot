@@ -1,6 +1,8 @@
 import EmotionTrendChart from "../components/EmotionTrendChart";
 import WeeklySummaryCard from "../components/WeeklySummaryCard";
 import CameraEmotion from "../components/CameraEmotion";
+import MultimodalEmotionChart from "../components/MultimodalEmotionChart";
+import AgreementCard from "../components/AgreementCard";
 import "../styles/dashboard.css";
 
 const Dashboard = () => {
@@ -13,6 +15,8 @@ const Dashboard = () => {
                 <EmotionTrendChart />
                 <WeeklySummaryCard />
                 <CameraEmotion />
+                <MultimodalEmotionChart />
+                <AgreementCard />
             </div>
         </div>
     );
