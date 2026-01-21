@@ -25,8 +25,8 @@ const EmotionTrendChart = () => {
     const [chartData, setChartData] = useState(null);
 
     useEffect(() => {
-        api.get("/analytics/emotion-trends?weeks=6")
-            .then(res => formatChart(res.data.trends))
+        api.get("/analytics/multimodal-trends?weeks=6")
+            .then(res => formatChart(res.data.weeks))
             .catch(err => console.error(err));
     }, []);
 
@@ -37,7 +37,7 @@ const EmotionTrendChart = () => {
 
         const datasets = emotions.map((emotion) => ({
             label: emotion,
-            data: weeks.map(w => trends[w]?.[emotion] || 0),
+            data: weeks.map(w => trends[w]?.final?.[emotion] || 0),
             tension: 0.4
         }));
 

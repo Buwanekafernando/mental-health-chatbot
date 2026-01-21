@@ -5,7 +5,7 @@ const WeeklySummaryCard = () => {
     const [summary, setSummary] = useState(null);
 
     useEffect(() => {
-        api.get("/chat/weekly-summary")
+        api.get("/api/chat/weekly-summary")
             .then(res => setSummary(res.data))
             .catch(err => console.error(err));
     }, []);
