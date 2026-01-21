@@ -33,7 +33,7 @@ const ChatInterface = () => {
         setLoading(true);
 
         try {
-            const response = await api.post("/chat/analyze", { message: userMessage.text });
+            const response = await api.post("/api/chat/analyze", { message: userMessage.text });
 
             const botMessage = {
                 id: Date.now() + 1,
