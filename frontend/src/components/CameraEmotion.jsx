@@ -43,16 +43,22 @@ const CameraEmotion = () => {
     };
 
     return (
-        <div>
+        <div className="camera-container">
             <video
                 ref={videoRef}
                 autoPlay
                 muted
-                width="240"
-                height="180"
+                width="100%"
+                height="auto"
+                className="camera-feed"
                 onPlay={() => setInterval(detectEmotion, 3000)}
             />
-            <p><strong>Facial Emotion:</strong> {emotion}</p>
+            <div className="camera-overlay">
+                <div className="emotion-badge">
+                    <span className="emotion-label">Face:</span>
+                    <span className="emotion-value">{emotion}</span>
+                </div>
+            </div>
         </div>
     );
 };
