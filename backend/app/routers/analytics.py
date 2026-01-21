@@ -29,10 +29,14 @@ def multimodal_emotion_trends(
     for chat in chats:
         week = chat["timestamp"].strftime("%Y-W%U")
 
+        # Use final_emotion if available, otherwise fall back to emotion
+        final_emotion = chat.get("final_emotion") or chat.get("emotion")
+        
         weekly[week]["text"][chat.get("text_emotion")] += 1
         if chat.get("face_emotion"):
             weekly[week]["face"][chat["face_emotion"]] += 1
-        weekly[week]["final"][chat["final_emotion"]] += 1
+        if final_emotion:
+            weekly[week]["final"][final_emotion] += 1
 
     return {
         "weeks": weekly
