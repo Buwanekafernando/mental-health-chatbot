@@ -61,42 +61,32 @@ def analyze_message(
         }
 
 
-    emotion = detect_emotion(data.message)
     text_emotion = detect_emotion(data.message)
     
     context = get_recent_conversation(user_id, limit=5)
     recent_face_emotion = get_recent_face_emotion(user_id)
 
     final_emotion = fuse_emotions(
-    text_emotion=text_emotion,
-    face_emotion=recent_face_emotion
+        text_emotion=text_emotion,
+        face_emotion=recent_face_emotion
     )
 
-
-
     reply = generate_supportive_reply(
-    message=data.message,
-    emotion=final_emotion,
-    context=context
+        message=data.message,
+        emotion=final_emotion,
+        context=context
     )
 
     chat_collection.insert_one({
         "user_id": user_id,
         "message": data.message,
-        "emotion": emotion,
+        "text_emotion": text_emotion,
+        "face_emotion": recent_face_emotion,
+        "final_emotion": final_emotion,
+        "emotion": final_emotion, # For backward compatibility with summary logic
         "reply": reply,
         "timestamp": datetime.utcnow(),
         "crisis": False
-    })
-
-    chat_collection.insert_one({
-    "user_id": user_id,
-    "message": data.message,
-    "text_emotion": text_emotion,
-    "face_emotion": recent_face_emotion,
-    "final_emotion": final_emotion,
-    "reply": reply,
-    "timestamp": datetime.utcnow()
     })
 
 
