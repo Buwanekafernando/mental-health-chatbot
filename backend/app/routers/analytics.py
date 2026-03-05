@@ -10,7 +10,7 @@ router = APIRouter(prefix="/analytics", tags=["Analytics"])
 
 @router.get("/multimodal-trends")
 def multimodal_emotion_trends(
-    weeks: int = 6,
+    weeks: int = 12,
     user_email: str = Depends(get_current_user)
 ):
     start_date = datetime.utcnow() - timedelta(weeks=weeks)
@@ -18,7 +18,7 @@ def multimodal_emotion_trends(
     chats = chat_collection.find({
         "user_id": user_email,
         "timestamp": {"$gte": start_date}
-    })
+    }).sort("timestamp", 1) # Sort by timestamp to ensure chronological weeks
 
     weekly = defaultdict(lambda: {
         "text": Counter(),
